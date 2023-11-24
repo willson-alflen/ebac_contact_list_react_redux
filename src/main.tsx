@@ -15,7 +15,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>
 )
 
-/**
- * how can I use the PersistGate component to delay rendering the application
- * until the persisted store has been loaded from storage?
- */
