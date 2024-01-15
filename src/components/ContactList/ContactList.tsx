@@ -30,6 +30,7 @@ const ContactList: React.FC = () => {
   const [emailValid, setEmailValid] = React.useState(false)
   const [editingIndex, setEditingIndex] = React.useState(-1)
   const [isSubmited, setIsSubmited] = React.useState(false)
+  const [searchTerm, setSearchTerm] = React.useState('')
 
   const handleAddContact = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -108,59 +109,86 @@ const ContactList: React.FC = () => {
     setEmail('')
   }
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value)
+  }
+
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  const displayedContacts = searchTerm ? filteredContacts : contacts
+
   return (
     <S.ContactListWrapper>
       <S.Form onSubmit={handleAddContact}>
-        <div className="form-inputs">
-          <label htmlFor="contact-name" aria-label="Contact Name">
-            <input
-              type="text"
-              name="name"
-              id="contact-name"
-              value={editingIndex === -1 ? name : ''}
-              placeholder="Michael Scott"
-              onChange={handleNameChange}
-            />
-            {isSubmited && !nameValid && (
-              <span className="error-message">Please enter a name</span>
-            )}
-          </label>
-          <label htmlFor="contact-number" aria-label="Contact Phone Number">
-            <InputMask
-              name="phone"
-              id="contact-number"
-              value={editingIndex === -1 ? phone : ''}
-              placeholder="(99) 99999-9999"
-              mask="(99) 99999-9999"
-              maskChar=" "
-              onChange={handlePhoneChange}
-            />
-            {isSubmited && !phoneValid && (
-              <span className="error-message">
-                Please enter a valid phone number
-              </span>
-            )}
-          </label>
-          <label htmlFor="contact-email" aria-label="Contact E-mail Address">
-            <input
-              type="text"
-              name="email"
-              id="contact-email"
-              value={editingIndex === -1 ? email : ''}
-              placeholder="michaelscott@example.com"
-              onChange={handleEmailChange}
-            />
-            {isSubmited && !emailValid && (
-              <span className="error-message">
-                Please enter a valid email address
-              </span>
-            )}
-          </label>
-        </div>
+        <fieldset>
+          <legend>Add a new contact</legend>
+          <div className="form-inputs">
+            <label htmlFor="contact-name" aria-label="Contact Name">
+              <input
+                type="text"
+                name="name"
+                id="contact-name"
+                value={editingIndex === -1 ? name : ''}
+                placeholder="Michael Scott"
+                onChange={handleNameChange}
+              />
+              {isSubmited && !nameValid && (
+                <span className="error-message">Please enter a name</span>
+              )}
+            </label>
+            <label htmlFor="contact-number" aria-label="Contact Phone Number">
+              <InputMask
+                name="phone"
+                id="contact-number"
+                value={editingIndex === -1 ? phone : ''}
+                placeholder="(99) 99999-9999"
+                mask="(99) 99999-9999"
+                maskChar=" "
+                onChange={handlePhoneChange}
+              />
+              {isSubmited && !phoneValid && (
+                <span className="error-message">
+                  Please enter a valid phone number
+                </span>
+              )}
+            </label>
+            <label htmlFor="contact-email" aria-label="Contact E-mail Address">
+              <input
+                type="text"
+                name="email"
+                id="contact-email"
+                value={editingIndex === -1 ? email : ''}
+                placeholder="michaelscott@example.com"
+                onChange={handleEmailChange}
+              />
+              {isSubmited && !emailValid && (
+                <span className="error-message">
+                  Please enter a valid email address
+                </span>
+              )}
+            </label>
+          </div>
 
-        <button className="add-button" type="submit">
-          Add Contact
-        </button>
+          <button className="add-button" type="submit">
+            Add Contact
+          </button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Search a contact</legend>
+          <label htmlFor="search" aria-label="Search a contact">
+            <input
+              type="text"
+              placeholder="Find Someone"
+              name="search"
+              id="search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </label>
+        </fieldset>
       </S.Form>
       <S.Table>
         <thead>
@@ -172,7 +200,7 @@ const ContactList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {contacts.map((contact, index) => (
+          {displayedContacts.map((contact, index) => (
             <tr key={contact.id}>
               <td data-cell="name">
                 {editingIndex === index ? (
@@ -248,3 +276,10 @@ const ContactList: React.FC = () => {
 }
 
 export default ContactList
+
+// how can I implement pagination for the list of contacts?
+// how can I persist the data in the browser using localStorage?
+// how can I implement a dark mode?
+// how can I  implement a feature to identify and merge duplicate contacts, preventing redundancy in the list?
+// how can I make the app  accessible to a wide range of users by incorporating accessibility features, such as keyboard navigation and screen reader support?
+// how can I enable users to add profile pictures to their contacts?

@@ -8,6 +8,17 @@ export const ContactListWrapper = styled.div`
 export const Form = styled.form`
   margin-bottom: 56px;
 
+  fieldset {
+    padding: 16px 8px;
+    margin-bottom: 32px;
+
+    legend {
+      font-weight: bold;
+      margin-left: 16px;
+      padding: 0 8px;
+    }
+  }
+
   .form-inputs {
     display: flex;
     justify-content: space-between;
@@ -45,6 +56,18 @@ export const Form = styled.form`
     margin: 0 auto;
   }
 
+  #search {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    background-color: #fff;
+    width: 270px;
+    border: none;
+    border-radius: 5px;
+    border-bottom: 2px solid #000;
+    padding: 8px;
+    margin-top: 16px;
+  }
+
   @media (max-width: 860px) {
     padding: 0 1.5rem;
 
@@ -58,6 +81,10 @@ export const Form = styled.form`
       .error-message {
         margin: 8px 0 16px 8px;
       }
+    }
+
+    #search {
+      width: 100%;
     }
   }
 
@@ -74,6 +101,10 @@ export const Form = styled.form`
     }
 
     .add-button {
+      font-size: 16px;
+    }
+
+    #search {
       font-size: 16px;
     }
   }
