@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { nanoid } from '@reduxjs/toolkit'
 import { RootState } from '../../store'
@@ -47,6 +47,8 @@ const ContactList: React.FC = () => {
 
       dispatch(addContact(contact))
 
+      localStorage.setItem('contacts', JSON.stringify([...contacts, contact]))
+
       setName('')
       setPhone('')
       setEmail('')
@@ -73,6 +75,9 @@ const ContactList: React.FC = () => {
 
   const handleDeleteContact = (id: string) => {
     dispatch(deleteContact(id))
+
+    const updatedContacts = contacts.filter((contact) => contact.id !== id)
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts))
   }
 
   const handleUpdateContact = (index: number) => {
@@ -88,6 +93,10 @@ const ContactList: React.FC = () => {
     }
 
     dispatch(updateContact({ index, contact }))
+
+    const updatedContacts = [...contacts]
+    updatedContacts[index] = contact
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts))
 
     setEditingIndex(-1)
     setName('')
@@ -118,6 +127,10 @@ const ContactList: React.FC = () => {
   )
 
   const displayedContacts = searchTerm ? filteredContacts : contacts
+
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts))
+  }, [contacts])
 
   return (
     <S.ContactListWrapper>
@@ -276,10 +289,3 @@ const ContactList: React.FC = () => {
 }
 
 export default ContactList
-
-// how can I implement pagination for the list of contacts?
-// how can I persist the data in the browser using localStorage?
-// how can I implement a dark mode?
-// how can I  implement a feature to identify and merge duplicate contacts, preventing redundancy in the list?
-// how can I make the app  accessible to a wide range of users by incorporating accessibility features, such as keyboard navigation and screen reader support?
-// how can I enable users to add profile pictures to their contacts?
