@@ -1,27 +1,25 @@
-# React + TypeScript + Vite
+# Exercício: Lista de Contatos - React + Redux
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![contact-list](https://github.com/willson-alflen/ebac_food/assets/87523872/c01e1ccb-3f95-41ec-86bc-e795b01585e4)
 
-Currently, two official plugins are available:
+## Requisitos da atividade
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1) Criar uma lista de contatos utilizando o React.
+2) Usar o Redux para gestão dos dados.
+3) Utilizar o Styled-Components para estilização.
+4) Os contatos deverão conter as informações: nome completo, e-mail e telefone;
+5) Incluir as funcionalidades: adição, remoção e edição dos itens da lista de contatos.
 
-## Expanding the ESLint configuration
+## Orientações
+### Para clonar o projeto
+`https://github.com/willson-alflen/ebac_contact_list_react_redux.git` ou <br />
+`git@github.com:willson-alflen/ebac_contact_list_react_redux.git`
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Para instalar as dependências
+`npm install` ou `yarn install`
 
-- Configure the top-level `parserOptions` property like this:
+### Para executar a aplicação em localhost
+`npm run dev` ou `yarn dev`
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Para visualizar o projeto online
+ [https://contact-list-react-redux.vercel.app/](https://contact-list-react-redux.vercel.app/)
