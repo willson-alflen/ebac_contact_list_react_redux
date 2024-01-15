@@ -17,13 +17,13 @@ const initialState: ContactsState = {
       id: '1',
       name: 'John Doe',
       email: 'johndoe@example.com',
-      phone: '555-555-5555',
+      phone: '(55) 55555-5555',
     },
     {
       id: '2',
       name: 'Jane Smith',
       email: 'janesmith@example.com',
-      phone: '555-555-5555',
+      phone: '(55) 55555-5555',
     },
   ],
 }
