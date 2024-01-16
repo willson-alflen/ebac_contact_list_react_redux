@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const ContactListWrapper = styled.div`
-  max-width: 860px;
+  max-width: 1020px;
   margin: 0 auto;
 `
 
@@ -9,7 +9,7 @@ export const Form = styled.form`
   margin-bottom: 56px;
 
   fieldset {
-    padding: 16px 8px;
+    padding: 16px;
     margin-bottom: 32px;
 
     legend {
@@ -20,26 +20,53 @@ export const Form = styled.form`
   }
 
   .form-inputs {
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 16px;
 
-    input {
-      font-family: 'Roboto', sans-serif;
-      font-size: 20px;
-      background-color: #fff;
-      width: 270px;
-      border: none;
-      border-radius: 5px;
-      border-bottom: 2px solid #000;
-      padding: 8px;
-    }
+    .input-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
 
-    .error-message {
-      display: block;
-      color: red;
-      font-size: 0.75rem;
-      margin: 8px 0 0 16px;
+      #profilePic-label {
+        width: 27%;
+        font-family: 'Roboto', sans-serif;
+        font-size: 20px;
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 5px;
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-around;
+        margin: 0 auto;
+      }
+
+      label {
+        width: 49%;
+
+        input[type='file'] {
+          display: none;
+        }
+
+        input {
+          font-family: 'Roboto', sans-serif;
+          font-size: 20px;
+          background-color: #fff;
+          width: 100%;
+          border: none;
+          border-radius: 5px;
+          border-bottom: 2px solid #000;
+          padding: 8px;
+        }
+
+        .error-message {
+          display: block;
+          color: red;
+          font-size: 0.75rem;
+          margin: 8px 0 0 16px;
+        }
+      }
     }
   }
 
@@ -65,7 +92,6 @@ export const Form = styled.form`
     border-radius: 5px;
     border-bottom: 2px solid #000;
     padding: 8px;
-    margin-top: 16px;
   }
 
   @media (max-width: 860px) {

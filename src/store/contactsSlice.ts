@@ -5,6 +5,7 @@ export interface Contact {
   name: string
   email: string
   phone: string
+  profilePic: string
 }
 
 interface ContactsState {
@@ -18,12 +19,14 @@ const initialState: ContactsState = {
       name: 'John Doe',
       email: 'johndoe@example.com',
       phone: '(55) 55555-5555',
+      profilePic: '',
     },
     {
       id: '2',
       name: 'Jane Smith',
       email: 'janesmith@example.com',
       phone: '(55) 55555-5555',
+      profilePic: '',
     },
   ],
 }

@@ -12,6 +12,7 @@ import {
 import * as S from './styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  faUserCircle,
   faPenToSquare,
   faTrash,
   faXmark,
@@ -31,27 +32,54 @@ const ContactList: React.FC = () => {
   const [editingIndex, setEditingIndex] = React.useState(-1)
   const [isSubmited, setIsSubmited] = React.useState(false)
   const [searchTerm, setSearchTerm] = React.useState('')
+  const [profilePic, setProfilePic] = React.useState<File | null>(null)
+  const [profilePicPreview, setProfilePicPreview] = React.useState<
+    string | null
+  >(null)
 
   const handleAddContact = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setIsSubmited(true)
 
-    if (nameValid && phoneValid && emailValid) {
-      const contact: Contact = {
-        id: nanoid(),
-        name,
-        phone,
-        email,
+    if (
+      nameValid &&
+      phoneValid &&
+      emailValid &&
+      name !== '' &&
+      phone !== '' &&
+      email !== ''
+    ) {
+      const addContactAndResetForm = (profilePicUrl: string) => {
+        const contact: Contact = {
+          id: nanoid(),
+          name,
+          phone,
+          email,
+          profilePic: profilePicUrl || '/assets/user.png',
+        }
+
+        dispatch(addContact(contact))
+
+        localStorage.setItem('contacts', JSON.stringify([...contacts, contact]))
+
+        setName('')
+        setPhone('')
+        setEmail('')
+        setProfilePic(null)
+        setProfilePicPreview(null)
       }
 
-      dispatch(addContact(contact))
-
-      localStorage.setItem('contacts', JSON.stringify([...contacts, contact]))
-
-      setName('')
-      setPhone('')
-      setEmail('')
+      if (profilePic) {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          const profilePicUrl = reader.result as string
+          addContactAndResetForm(profilePicUrl)
+        }
+        reader.readAsDataURL(profilePic)
+      } else {
+        addContactAndResetForm('/assets/user.png')
+      }
     }
   }
 
@@ -73,6 +101,21 @@ const ContactList: React.FC = () => {
     setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
   }
 
+  const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setProfilePic(file)
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setProfilePicPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    } else {
+      setProfilePicPreview(null)
+    }
+  }
+
   const handleDeleteContact = (id: string) => {
     dispatch(deleteContact(id))
 
@@ -85,23 +128,38 @@ const ContactList: React.FC = () => {
       return
     }
 
-    const contact: Contact = {
-      id: contacts[index].id,
-      name,
-      phone,
-      email,
+    const updateContactAndResetForm = (profilePicUrl: string) => {
+      const contact: Contact = {
+        id: contacts[index].id,
+        name,
+        phone,
+        email,
+        profilePic: profilePicUrl || '/assets/user.png',
+      }
+
+      dispatch(updateContact({ index, contact }))
+
+      const updatedContacts = [...contacts]
+      updatedContacts[index] = contact
+      localStorage.setItem('contacts', JSON.stringify(updatedContacts))
+
+      setEditingIndex(-1)
+      setName('')
+      setPhone('')
+      setEmail('')
+      setProfilePic(null)
     }
 
-    dispatch(updateContact({ index, contact }))
-
-    const updatedContacts = [...contacts]
-    updatedContacts[index] = contact
-    localStorage.setItem('contacts', JSON.stringify(updatedContacts))
-
-    setEditingIndex(-1)
-    setName('')
-    setPhone('')
-    setEmail('')
+    if (profilePic) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const profilePicUrl = reader.result as string
+        updateContactAndResetForm(profilePicUrl)
+      }
+      reader.readAsDataURL(profilePic)
+    } else {
+      updateContactAndResetForm(contacts[index].profilePic)
+    }
   }
 
   const handleEditContact = (index: number) => {
@@ -138,50 +196,81 @@ const ContactList: React.FC = () => {
         <fieldset>
           <legend>Add a new contact</legend>
           <div className="form-inputs">
-            <label htmlFor="contact-name" aria-label="Contact Name">
-              <input
-                type="text"
-                name="name"
-                id="contact-name"
-                value={editingIndex === -1 ? name : ''}
-                placeholder="Michael Scott"
-                onChange={handleNameChange}
-              />
-              {isSubmited && !nameValid && (
-                <span className="error-message">Please enter a name</span>
-              )}
-            </label>
-            <label htmlFor="contact-number" aria-label="Contact Phone Number">
-              <InputMask
-                name="phone"
-                id="contact-number"
-                value={editingIndex === -1 ? phone : ''}
-                placeholder="(99) 99999-9999"
-                mask="(99) 99999-9999"
-                maskChar=" "
-                onChange={handlePhoneChange}
-              />
-              {isSubmited && !phoneValid && (
-                <span className="error-message">
-                  Please enter a valid phone number
-                </span>
-              )}
-            </label>
-            <label htmlFor="contact-email" aria-label="Contact E-mail Address">
-              <input
-                type="text"
-                name="email"
-                id="contact-email"
-                value={editingIndex === -1 ? email : ''}
-                placeholder="michaelscott@example.com"
-                onChange={handleEmailChange}
-              />
-              {isSubmited && !emailValid && (
-                <span className="error-message">
-                  Please enter a valid email address
-                </span>
-              )}
-            </label>
+            <div className="input-group">
+              <label htmlFor="contact-name" aria-label="Contact Name">
+                <input
+                  type="text"
+                  name="name"
+                  id="contact-name"
+                  value={editingIndex === -1 ? name : ''}
+                  placeholder="Michael Scott"
+                  onChange={handleNameChange}
+                />
+                {isSubmited && !nameValid && (
+                  <span className="error-message">Please enter a name</span>
+                )}
+              </label>
+              <label htmlFor="contact-number" aria-label="Contact Phone Number">
+                <InputMask
+                  name="phone"
+                  id="contact-number"
+                  value={editingIndex === -1 ? phone : ''}
+                  placeholder="(99) 99999-9999"
+                  mask="(99) 99999-9999"
+                  maskChar=" "
+                  onChange={handlePhoneChange}
+                />
+                {isSubmited && !phoneValid && (
+                  <span className="error-message">
+                    Please enter a valid phone number
+                  </span>
+                )}
+              </label>
+            </div>
+            <div className="input-group">
+              <label
+                htmlFor="contact-email"
+                aria-label="Contact E-mail Address"
+              >
+                <input
+                  type="text"
+                  name="email"
+                  id="contact-email"
+                  value={editingIndex === -1 ? email : ''}
+                  placeholder="michaelscott@example.com"
+                  onChange={handleEmailChange}
+                />
+                {isSubmited && !emailValid && (
+                  <span className="error-message">
+                    Please enter a valid email address
+                  </span>
+                )}
+              </label>
+              <label
+                htmlFor="contact-profilePic"
+                id="profilePic-label"
+                aria-label="Contact Profile Picture"
+              >
+                <span>Upload picture</span>
+                <FontAwesomeIcon icon={faUserCircle} className="fa-icon" />
+                <input
+                  type="file"
+                  name="profilePic"
+                  id="contact-profilePic"
+                  onChange={(e) => {
+                    handleProfilePicChange(e)
+                    setProfilePic(e.target.files ? e.target.files[0] : null)
+                  }}
+                />
+                {profilePicPreview && (
+                  <img
+                    src={profilePicPreview}
+                    alt="Profile preview"
+                    style={{ width: '24px', height: 'auto' }}
+                  />
+                )}
+              </label>
+            </div>
           </div>
 
           <button className="add-button" type="submit">
@@ -206,6 +295,7 @@ const ContactList: React.FC = () => {
       <S.Table>
         <thead>
           <tr>
+            <th></th>
             <th>Name</th>
             <th>Phone</th>
             <th>Email</th>
@@ -215,6 +305,13 @@ const ContactList: React.FC = () => {
         <tbody>
           {displayedContacts.map((contact, index) => (
             <tr key={contact.id}>
+              <td data-cell="picture">
+                <img
+                  src={contact.profilePic || '/assets/user.png'}
+                  alt={contact.name}
+                  style={{ width: '48px', height: 'auto' }}
+                />
+              </td>
               <td data-cell="name">
                 {editingIndex === index ? (
                   <input
