@@ -31,11 +31,16 @@ const ContactList: React.FC = () => {
   const [emailValid, setEmailValid] = React.useState(false)
   const [editingIndex, setEditingIndex] = React.useState(-1)
   const [isSubmited, setIsSubmited] = React.useState(false)
-  const [searchTerm, setSearchTerm] = React.useState('')
   const [profilePic, setProfilePic] = React.useState<File | null>(null)
   const [profilePicPreview, setProfilePicPreview] = React.useState<
     string | null
   >(null)
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const [sortedContacts, setSortedContacts] =
+    React.useState<Contact[]>(contacts)
+  const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>(
+    'asc'
+  )
 
   const handleAddContact = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -184,7 +189,16 @@ const ContactList: React.FC = () => {
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const displayedContacts = searchTerm ? filteredContacts : contacts
+  const handleSortContacts = () => {
+    const newSortedContacts = [...contacts].sort((a, b) => {
+      const comparison = a.name.localeCompare(b.name)
+      return sortDirection === 'asc' ? comparison : -comparison
+    })
+    setSortedContacts(newSortedContacts)
+  }
+
+  // const displayedContacts = searchTerm ? filteredContacts : contacts
+  const displayedContacts = searchTerm ? filteredContacts : sortedContacts
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts))
@@ -193,7 +207,7 @@ const ContactList: React.FC = () => {
   return (
     <S.ContactListWrapper>
       <S.Form onSubmit={handleAddContact}>
-        <fieldset>
+        <fieldset className="new-contact">
           <legend>Add a new contact</legend>
           <div className="form-inputs">
             <div className="input-group">
@@ -278,18 +292,29 @@ const ContactList: React.FC = () => {
           </button>
         </fieldset>
 
-        <fieldset>
-          <legend>Search a contact</legend>
+        <fieldset className="list-options">
+          <legend>List options</legend>
           <label htmlFor="search" aria-label="Search a contact">
             <input
               type="text"
-              placeholder="Find Someone"
+              placeholder="Type to search"
               name="search"
               id="search"
               value={searchTerm}
               onChange={handleSearchChange}
             />
           </label>
+
+          <button
+            type="button"
+            id="sort-button"
+            onClick={() => {
+              setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+              handleSortContacts()
+            }}
+          >
+            Sort Contacts ({sortDirection === 'asc' ? 'A-Z' : 'Z-A'})
+          </button>
         </fieldset>
       </S.Form>
       <S.Table>
